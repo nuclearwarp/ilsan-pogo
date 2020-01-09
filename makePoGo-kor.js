@@ -2,13 +2,10 @@
 // @id           nuclearwarp
 // @name         Pogo Tools (NuclearWarp ver)
 // @category     Layer
-// @namespace    https://gitlab.com/AlfonsoML/pogo-s2/
+// @namespace    https://github.com/nuclearwarp/ilsan-pogo/
 // @downloadURL  https://gitlab.com/nuclearwarp/ilsan-pogo/raw/master/makePoGo-kor.js
-// @supportURL   https://twitter.com/PogoCells
 // @version      0.93.31
-// @description  Pokemon Go tools over IITC. News on https://twitter.com/PogoCells
-// @author       Alfonso M.
-// @modify       CP0xNuclearWarp
+// @author       CP0xNuclearWarp
 // @match        https://intel.ingress.com/*
 // @grant        none
 // ==/UserScript==
