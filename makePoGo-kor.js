@@ -1,6 +1,6 @@
 // ==UserScript==
-// @id           s2check@alfonsoml
-// @name         수정Pogo Tools (NuclearWarp ver)
+// @id           nuclearwarp
+// @name         Pogo Tools (NuclearWarp ver)
 // @category     Layer
 // @namespace    https://gitlab.com/AlfonsoML/pogo-s2/
 // @downloadURL  https://gitlab.com/nuclearwarp/ilsan-pogo/raw/master/makePoGo-kor.js
