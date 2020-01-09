@@ -3,7 +3,7 @@
 // @name         Pogo Tools (NuclearWarp ver)
 // @category     Layer
 // @namespace    https://github.com/nuclearwarp/ilsan-pogo/
-// @downloadURL  https://gitlab.com/nuclearwarp/ilsan-pogo/raw/master/makePoGo-kor.js
+// @downloadURL  https://github.com/nuclearwarp/ilsan-pogo/raw/master/makePoGo-kor.js
 // @version      0.93.31
 // @author       CP0xNuclearWarp
 // @match        https://intel.ingress.com/*
