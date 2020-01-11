@@ -563,15 +563,15 @@ function wrapperPlugin(plugin_info) {
 			},
 			cellsMissingGyms: {
 				color: '#ffa500',
-				opacity: 0.5
+				opacity: 0.4
 			},
 			cell17Filled: {
 				color: '#000000',
-				opacity: 0.6
+				opacity: 0.4
 			},
 			cell14Filled: {
 				color: '#000000',
-				opacity: 0.5
+				opacity: 0.3
 			},
 			nearbyCircleBorder: {
 				color: '#000000',
@@ -582,15 +582,15 @@ function wrapperPlugin(plugin_info) {
 				opacity: 0.4
 			},
 			missingStops1: {
-				color: '#BF360C',
+				color: '#ff0000',
 				opacity: 1
 			},
 			missingStops2: {
-				color: '#E64A19',
+				color: '#8000FF',
 				opacity: 1
 			},
 			missingStops3: {
-				color: '#FF5722',
+				color: '#0080FF',
 				opacity: 1
 			}
 		},
