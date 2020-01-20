@@ -4,7 +4,7 @@
 // @category     Layer
 // @namespace    https://github.com/nuclearwarp/ilsan-pogo/
 // @downloadURL  https://github.com/nuclearwarp/ilsan-pogo/raw/master/makePoGo-kor.js
-// @version      0.97.1
+// @version      0.97.3
 // @author       CP0xNuclearWarp
 // @match        https://intel.ingress.com/*
 // @grant        none
@@ -555,7 +555,7 @@
 		let gymLayers = {};
 		let nearbyCircles = {};
 
-		const highlighterTitle = 'PoGo Tools';
+		const highlighterTitle = '포고 모드';
 		const gymCellLevel = 14; // the cell level which is considered when counting POIs to determine # of gyms
 		const poiCellLevel = 17; // the cell level where there can only be 1 POI translated to pogo
 
@@ -3733,7 +3733,7 @@
 /* globals L, map */
 /* globals GM_info, $, dialog */
 
-;function wrapper(plugin_info) {
+;function wrapper(plugin_info) { // eslint-disable-line no-extra-semi
 	'use strict';
 
 	// PLUGIN START ///////////////////////////////////////////////////////
@@ -3745,6 +3745,7 @@
 	let plottedmarkers = {};
 	let plottedtitles = {};
 	let plottedsubmitrange = {};
+	let plottedinteractrange = {};
 
 	// Define the layers created by the plugin, one for each marker status
 	const mapLayers = {
@@ -3780,11 +3781,12 @@
 		},
 	};
 
-	const defaultSettings = {
+    const defaultSettings = {
 		showTitles: true,
 		showRadius: false,
+		showInteractionRadius: false,
 		scriptURL: ''
-	}
+	};
 	let settings = defaultSettings;
 
 	function saveSettings() {
@@ -3820,20 +3822,20 @@
 
 	function getStoredData() {
 		const url = settings.scriptURL;
-		if (!url)
+		if (!url) {
+			markercollection = [];
+			drawMarkers();
 			return;
+		}
 
 		$.ajax({
 			url: url,
 			type: 'GET',
 			dataType: 'text',
 			success: function (data, status, header) {
-				try
-				{
+				try {
 					markercollection = JSON.parse(data);
-				}
-				catch (e)
-				{
+				} catch (e) {
 					console.log('Wayfarer Planner. Exception parsing response: ', e); // eslint-disable-line no-console
 					alert('Wayfarer Planner. Exception parsing response.');
 					return;
@@ -3845,7 +3847,7 @@
 				alert('Wayfarer Planner. Failed to retrieve data from the scriptURL.');
 			}
 		});
-	};
+	}
 
 	function drawMarker(candidate) {
 		if (candidate != undefined && candidate.lat != '' && candidate.lng != '') {
@@ -3853,7 +3855,7 @@
 			addTitleToLayer(candidate);
 			addCircleToLayer(candidate);
 		}
-	};
+	}
 
 	function addCircleToLayer(candidate) {
 		if (settings.showRadius) {
@@ -3871,7 +3873,22 @@
 
 			plottedsubmitrange[candidate.id] = circle;
 		}
-	};
+		if (settings.showInteractionRadius) {
+			const latlng = L.latLng(candidate.lat, candidate.lng);
+
+			// Specify the interaction circle options
+			const circleOptions = {color: 'grey', opacity: 1, fillOpacity: 0, weight: 1, clickable: false, interactive: false};
+			const range = 40;
+
+			// Create the circle object with specified options
+			const circle = new L.Circle(latlng, range, circleOptions);
+			// Add the new circle
+			const existingMarker = plottedmarkers[candidate.id];
+			existingMarker.layer.addLayer(circle);
+
+			plottedinteractrange[candidate.id] = circle;
+		}
+	}
 
 	function removeExistingCircle(guid) {
 		const existingCircle = plottedsubmitrange[guid];
@@ -3880,7 +3897,13 @@
 			existingMarker.layer.removeLayer(existingCircle);
 			delete plottedsubmitrange[guid];
 		}
-	};
+		const existingInteractCircle = plottedinteractrange[guid];
+		if (existingInteractCircle !== undefined) {
+			const existingMarker = plottedmarkers[guid];
+			existingMarker.layer.removeLayer(existingInteractCircle);
+			delete plottedinteractrange[guid];
+		}
+	}
 
 	function addTitleToLayer(candidate) {
 		if (settings.showTitles) {
@@ -3902,7 +3925,7 @@
 				plottedtitles[candidate.id] = titleMarker;
 			}
 		}
-	};
+	}
 
 	function removeExistingTitle(guid) {
 		const existingTitle = plottedtitles[guid];
@@ -3911,7 +3934,7 @@
 			existingMarker.layer.removeLayer(existingTitle);
 			delete plottedtitles[guid];
 		}
-	};
+	}
 
 	function removeExistingMarker(guid) {
 		const existingMarker = plottedmarkers[guid];
@@ -3955,7 +3978,7 @@
 
 		markerLayer.addLayer(marker);
 		plottedmarkers[candidate.id] = {'marker': marker, 'layer': markerLayer};
-	};
+	}
 
 	function clearAllLayers() {
 		Object.values(mapLayers).forEach(data => data.layer.clearLayers());
@@ -3964,12 +3987,13 @@
 		plottedmarkers = {};
 		plottedtitles = {};
 		plottedsubmitrange = {};
-	};
+		plottedinteractrange = {};
+	}
 
 	function drawMarkers() {
 		clearAllLayers();
 		markercollection.forEach(drawMarker);
-	};
+	}
 
 	function onMapClick(e) {
 		if (isPlacingMarkers) {
@@ -3986,7 +4010,7 @@
 
 			drawInputPopop(e.latlng);
 		}
-	};
+	}
 
 	function drawInputPopop(latlng, markerData) {
 		const formpopup = L.popup();
@@ -4053,6 +4077,7 @@
 		if (imageUrl !== '' && imageUrl !== undefined) {
 			formContent += ' <a href="' + imageUrl + '" style="padding:4px; float:right;" target="_blank">Image</a>';
 		}
+        const align = id !== '' ? 'float: right' : 'box-sizing: border-box; text-align: right; display: inline-block; width: 100%';
 		formContent += ` <a href="https://www.google.com/maps?layer=c&cbll=${lat},${lng}" style="padding:4px; float:right;" target="_blank">스뷰 보기</a>`;
 
 		formpopup.setContent(formContent + '</div>');
@@ -4098,19 +4123,17 @@
 			editmarker = null;
 		}
 		drawInputPopop(event.layer.getLatLng(), event.layer.options.data);
-	};
+	}
 
 	function getGenericMarkerSvg(color) {
 		const markerTemplate = `<?xml version="1.0" encoding="UTF-8"?>
 			<svg xmlns="http://www.w3.org/2000/svg" baseProfile="full" viewBox="0 0 25 41">
-				<path d="M1.362 18.675a12.5 12.5 0 1 1 22.276 0L12.5 40.534z" fill="%COLOR%"/>
-				<path d="M1.808 18.448a12 12 0 1 1 21.384 0L12.5 39.432z" stroke="#000" stroke-opacity=".15" fill="none"/>
-				<path d="M2.922 17.88a10.75 10.75 0 1 1 19.156 0L12.5 36.68z" stroke="#fff" stroke-width="1.5" stroke-opacity=".35" fill="none"/>
-				<path d="M19.861 17.25L12.5 21.5l-7.361-4.25v-8.5L12.5 4.5l7.361 4.25zm-12.124-7h9.526L12.5 18.5zM12.5 13l-4.763-2.75M12.5 13l4.763-2.75M12.5 13v5.5m7.361-1.25l-3.464-2m-11.258 2l3.464-2M12.5 4.5v4" stroke="#fff" stroke-width="1.25" fill="none"/>
+				<path d="M19.4,3.1c-3.3-3.3-6.1-3.3-6.9-3.1c-0.6,0-3.7,0-6.9,3.1c-4,4-1.3,9.4-1.3,9.4s5.6,14.6,6.3,16.3c0.6,1.2,1.3,1.5,1.7,1.5c0,0,0,0,0.2,0h0.2c0.4,0,1.2-0.4,1.7-1.5c0.8-1.7,6.3-16.3,6.3-16.3S23.5,7.2,19.4,3.1z M13.1,12.4c-2.3,0.4-4.4-1.5-4-4c0.2-1.3,1.3-2.5,2.9-2.9c2.3-0.4,4.4,1.5,4,4C15.6,11,14.4,12.2,13.1,12.4z" fill="%COLOR%" stroke="#fff"/>
+				<path d="M12.5,34.1c1.9,0,3.5,1.5,3.5,3.5c0,1.9-1.5,3.5-3.5,3.5S9,39.5,9,37.5c0-1.2,0.6-2.2,1.5-2.9 C11.1,34.3,11.8,34.1,12.5,34.1z" fill="%COLOR%" stroke="#fff"/>
 			</svg>`;
 
 		return markerTemplate.replace(/%COLOR%/g, color);
-	};
+	}
 
 	function getGenericMarkerIcon(color, className) {
 		return L.divIcon({
@@ -4119,7 +4142,7 @@
 			html: getGenericMarkerSvg(color),
 			className: className || 'leaflet-iitc-divicon-generic-marker'
 		});
-	};
+	}
 
 	function createGenericMarker(ll, color, options) {
 		options = options || {};
@@ -4129,7 +4152,7 @@
 		}, options);
 
 		return L.marker(ll, markerOpt);
-	};
+	}
 
 	function showDialog() {
 		if (window.isSmartphone())
@@ -4140,6 +4163,7 @@
 			 <p><a class='wayfarer-refresh'>계획표 설정</a></p>
 			 <p><input type="checkbox" id="chkShowTitles"><label for="chkShowTitles">신청 이름 보기 (체크)</label></p>
 			 <p><input type="checkbox" id="chkShowRadius"><label for="chkShowRadius">지름 반원 보기 (체크)</label></p>
+			 <p><input type="checkbox" id="chkShowInteractRadius"><label for="chkShowInteractRadius">Show interaction radius</label></p>
 			 <p><input type="checkbox" id="chkPlaceMarkers"><label for="chkPlaceMarkers">등록 기능 활성화</label></p>
 			`;
 
@@ -4153,8 +4177,20 @@
 					if (!txtInput.reportValidity())
 						return;
 
+					if (newUrl != '') {
+						if (!newUrl.startsWith('https://script.google.com/macros/')) {
+							alert('The URL of the script seems to be wrong, please paste the URL provided after "creating the webapp".');
+							return;
+						}
+
+						if (newUrl.includes('echo') || !newUrl.endsWith('exec')) {
+							alert('You must use the short URL provided by "creating the webapp", not the long one after executing the script.');
+							return;
+						}
+					}
+
 					if (newUrl != settings.scriptURL) {
-						settings.scriptURL = txtInput.value;
+						settings.scriptURL = newUrl;
 						saveSettings();
 						getStoredData();
 					}
@@ -4191,6 +4227,13 @@
 			saveSettings();
 			drawMarkers();
 		});
+		const chkShowInteractRadius = div.querySelector('#chkShowInteractRadius');
+		chkShowInteractRadius.checked = settings.showInteractionRadius;
+		chkShowInteractRadius.addEventListener('change', e => {
+			settings.showInteractionRadius = chkShowInteractRadius.checked;
+			saveSettings();
+			drawMarkers();
+		});
 
 		const chkPlaceMarkers = div.querySelector('#chkPlaceMarkers');
 		chkPlaceMarkers.checked = isPlacingMarkers;
@@ -4224,7 +4267,7 @@
 		$('<style>')
 			.prop('type', 'text/css')
 			.html(`.wayfarer-planner-name {
-				font-size: 14px;
+				font-size: 12px;
 				font-weight: bold;
 				color: gold;
 				opacity: 0.7;
