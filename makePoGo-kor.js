@@ -4,7 +4,7 @@
 // @category     Layer
 // @namespace    https://github.com/nuclearwarp/ilsan-pogo/
 // @downloadURL  https://github.com/nuclearwarp/ilsan-pogo/raw/master/makePoGo-kor.js
-// @version      0.97.3
+// @version      0.97.4
 // @author       CP0xNuclearWarp
 // @match        https://intel.ingress.com/*
 // @grant        none
@@ -918,10 +918,10 @@
 				selectRow.replace('{{level}}', '첫번째') +
 				selectRow.replace('{{level}}', '두번째') +
 				`<p><input type="checkbox" id="chkHighlightCandidates" /><label for="chkHighlightCandidates">포탈 셀 확인</label></p>
-				 <p><input type="checkbox" id="chkHighlightCenters" /><label for="chkHighlightCenters">무조건 체크해제</label></p>
-				 <p><input type="checkbox" id="chkThisIsPogo" /><label for="chkThisIsPogo" title='Hide Ingress panes, info and whatever that clutters the map and it is useless for Pokemon Go'>포고 모드</label></p>
-				 <p><input type="checkbox" id="chkanalyzeForMissingData" /><label for="chkanalyzeForMissingData" title="Analyze the portal data to show the pane that suggests new Pokestops and Gyms">스탑 및 체육관 생성 분석</label></p>
-				 <p><input type="checkbox" id="chkcenterMapOnClick" /><label for="chkcenterMapOnClick" title="Center map on portal when clicked in a dialog box.">체육관 생성 분석</label></p>
+				 <p type="hidden"><input type="checkbox" id="chkHighlightCenters" /><label for="chkHighlightCenters">무조건 체크해제</label></p>
+				 <p><input type="checkbox" id="chkThisIsPogo" /><label for="chkThisIsPogo" title='인그레스 관련 정보를 띄우지 않습니다.'>포고 모드</label></p>
+				 <p><input type="checkbox" id="chkanalyzeForMissingData" /><label for="chkanalyzeForMissingData" title="포탈을 분석하여 셀내 체육관 생성을 분석해줍니다.">스탑 및 체육관 생성 분석</label></p>
+				 <p><input type="checkbox" id="chkcenterMapOnClick" /><label for="chkcenterMapOnClick" title="셀 중앙 숫자 클릭시, 체육관 생성에 따른 생성 후보를 보여줍니다.">체육관 생성 분석</label></p>
 				 <p><a id='PogoEditColors'>색상 설정</a></p>
 				`;
 
@@ -1024,7 +1024,7 @@
 				id: 's2Colors',
 				width: 'auto',
 				html: html,
-				title: 'PoGo Grid Colors'
+				title: '포고 색상 설정'
 			});
 
 			const div = container[0];
@@ -4162,8 +4162,8 @@
 			`<p><label for="txtScriptUrl">방장이 주는 링크를 입력하세요.</label><br><input type="url" id="txtScriptUrl" spellcheck="false" placeholder="https://script.google.com/macros/***/exec"></p>
 			 <p><a class='wayfarer-refresh'>계획표 설정</a></p>
 			 <p><input type="checkbox" id="chkShowTitles"><label for="chkShowTitles">신청 이름 보기 (체크)</label></p>
-			 <p><input type="checkbox" id="chkShowRadius"><label for="chkShowRadius">지름 반원 보기 (체크)</label></p>
-			 <p><input type="checkbox" id="chkShowInteractRadius"><label for="chkShowInteractRadius">Show interaction radius</label></p>
+			 <p><input type="checkbox" id="chkShowRadius"><label for="chkShowRadius">20m 반경 보기 (체크)</label></p>
+			 <p><input type="checkbox" id="chkShowInteractRadius"><label for="chkShowInteractRadius">접근 가능 반경 (체크)</label></p>
 			 <p><input type="checkbox" id="chkPlaceMarkers"><label for="chkPlaceMarkers">등록 기능 활성화</label></p>
 			`;
 
