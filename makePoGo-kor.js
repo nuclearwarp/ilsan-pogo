@@ -4,9 +4,9 @@
 // @category     Layer
 // @namespace    https://github.com/nuclearwarp/ilsan-pogo/
 // @downloadURL  https://gitlab.com/nuclearwarp/ilsan-pogo/-/raw/master/makePogo-kor.js?inline=false
-// @version      0.97.9
+// @version      0.97.91
 // @author       CP0xNuclearWarp
-// @description  v0.97.9
+// @description  v0.97.91
 // @match        https://intel.ingress.com/*
 // @grant        none
 
@@ -4055,7 +4055,7 @@
 			<label>추가 정보
 			<input name="description" type="text" autocomplete="off" placeholder="추가 정보 작성" value="${description}">
 			</label>
-			<div class='wayfarer-expander' title='Click to expand additional fields'>»</div>
+			<div class='wayfarer-expander' title='클릭하면 펼쳐집니다.'>»</div>
 			<div class='wayfarer-extraData'>
 			<label>이미지 링크 (첨부 하면 좋습니다.)
 			<input name="candidateimageurl" type="text" autocomplete="off" placeholder="http://?.googleusercontent.com/***" value="${imageUrl}">
@@ -4317,6 +4317,7 @@
 				transition: transform .2s ease-out 0s;
 				position: absolute;
 				right: 0;
+				padding: 0 0 0 5px;
 			}
 
 			.wayfarer-extraData {
@@ -4333,6 +4334,9 @@
 				max-height: none;
 				margin-top: 0em;
 			}
+			.leaflet-popup-content-wrapper {
+				padding-bottom: 5px;
+}
 			`)
 			.appendTo('head');
 
