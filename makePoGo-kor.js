@@ -4317,7 +4317,7 @@
 				transition: transform .2s ease-out 0s;
 				position: absolute;
 				right: 0;
-				padding: 0 0 0 5px;
+				padding: 0 0 0 10px;
 			}
 
 			.wayfarer-extraData {
@@ -4335,7 +4335,7 @@
 				margin-top: 0em;
 			}
 			.leaflet-popup-content-wrapper {
-				padding-bottom: 5px;
+				padding-bottom: 10px;
 }
 			`)
 			.appendTo('head');
