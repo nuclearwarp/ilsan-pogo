@@ -3,9 +3,10 @@
 // @name         Pogo Tools (NuclearWarp ver)
 // @category     Layer
 // @namespace    https://github.com/nuclearwarp/ilsan-pogo/
-// @downloadURL  https://github.com/nuclearwarp/ilsan-pogo/raw/master/makePoGo-kor.js
-// @version      0.97.4
+// @downloadURL  https://gitlab.com/nuclearwarp/ilsan-pogo/-/raw/master/makePogo-kor.js?inline=false
+// @version      0.97.9
 // @author       CP0xNuclearWarp
+// @description  v0.97.9
 // @match        https://intel.ingress.com/*
 // @grant        none
 
@@ -1810,10 +1811,10 @@
 		// Manual import, export and reset data
 		thisPlugin.pogoActionsDialog = function () {
 			const content = `<div id="pogoSetbox">
-				<a id="save-dialog" title="Select the data to save from the info on screen">저장</a>
-				<a onclick="window.plugin.pogo.optReset();return false;" title="Deletes all Pokemon Go markers">포고 정보 초기화</a>
-				<a onclick="window.plugin.pogo.optImport();return false;" title="Import a JSON file with all the PoGo data">데이터 넣기</a>
-				<a onclick="window.plugin.pogo.optExport();return false;" title="Exports a JSON file with all the PoGo data">데이터 내보내기</a>
+				<a id="save-dialog" title="저장할 데이터를 선택하세요.">저장</a>
+				<a onclick="window.plugin.pogo.optReset();return false;" title="모든 포고 데이터 초기화">포고 정보 초기화</a>
+				<a onclick="window.plugin.pogo.optImport();return false;" title="JSON으로 된 포고 데이터 추가">데이터 넣기</a>
+				<a onclick="window.plugin.pogo.optExport();return false;" title="JSON으로 포고 데이터 내보내기">데이터 내보내기</a>
 				</div>`;
 
 			const container = dialog({
@@ -1827,13 +1828,13 @@
 
 		function saveDialog() {
 			const content = `<div>
-				<p>Select the data to save from the info on screen</p>
-				<fieldset><legend>Which data?</legend>
-				<input type='radio' name='PogoSaveDataType' value='Gyms' id='PogoSaveDataTypeGyms'><label for='PogoSaveDataTypeGyms'>Gyms</label><br>
-				<input type='radio' name='PogoSaveDataType' value='PokeStopsGyms' id='PogoSaveDataTypePokeStopsGyms'><label for='PogoSaveDataTypePokeStopsGyms'>Pokestops + Gyms</label>
+				<p>저장할 데이터를 선택하세요.</p>
+				<fieldset><legend>저장할 데이터 선택</legend>
+				<input type='radio' name='PogoSaveDataType' value='Gyms' id='PogoSaveDataTypeGyms'><label for='PogoSaveDataTypeGyms'>체육관</label><br>
+				<input type='radio' name='PogoSaveDataType' value='PokeStopsGyms' id='PogoSaveDataTypePokeStopsGyms'><label for='PogoSaveDataTypePokeStopsGyms'>체육관 + 스탑</label>
 				</fieldset>
 				<fieldset><legend>Format</legend>
-				<input type='radio' name='PogoSaveDataFormat' value='CSV' id='PogoSaveDataFormatCSV'><label for='PogoSaveDataFormatCSV'>CSV</label><br>
+				<input type='radio' name='PogoSaveDataFormat' value='CSV' id='PogoSaveDataFormatCSV'><label for='PogoSaveDataFormatCSV'>CSV (엑셀)</label><br>
 				<input type='radio' name='PogoSaveDataFormat' value='JSON' id='PogoSaveDataFormatJSON'><label for='PogoSaveDataFormatJSON'>JSON</label>
 				</fieldset>
 				</div>`;
@@ -2799,7 +2800,7 @@
 						});
 						updateCounter('pokestops', Object.values(newPokestops));
 					},
-					'Mark all as Pokestops': function () {
+					'전부 다 포켓스탑': function () {
 						container.dialog('close');
 						data.forEach(portal => {
 							if (!newPokestops[portal.guid])
@@ -2867,7 +2868,7 @@
 				id: 'classifyPokestop',
 				html: div,
 				width: width + 'px',
-				title: 'Which one is in Pokemon Go?',
+				title: '셀 중복 선택',
 				buttons: {
 					// Button to allow skip this cell
 					Skip: function () {
@@ -2926,9 +2927,9 @@
 				const img = getPortalImage(portal);
 				wrapper.innerHTML = '<span class="PogoName">' + getPortalName(portal) +
 					img + '</span>' +
-					'<span><span class="ingressLocation">' + 'Ingress location' + '</span></span>' +
-					'<span><span class="pogoLocation" data-lat="' + pogoItem.lat + '" data-lng="' + pogoItem.lng + '">' + 'Pogo location' + '</span><br>' +
-					'<a>' + 'Update' + '</a></span>';
+					'<span><span class="ingressLocation">' + '현재 위치' + '</span></span>' +
+					'<span><span class="pogoLocation" data-lat="' + pogoItem.lat + '" data-lng="' + pogoItem.lng + '">' + '이동 위치' + '</span><br>' +
+					'<a>' + '업데이트' + '</a></span>';
 				div.appendChild(wrapper);
 			});
 			const width = Math.min(screen.availWidth, 360);
@@ -2936,10 +2937,10 @@
 				id: 'movedPortals',
 				html: div,
 				width: width + 'px',
-				title: 'These portals have been moved in Ingress',
+				title: '이동된 포탈',
 				buttons: {
 					// Button to move all the portals at once
-					'Update all': function () {
+					'모두 업데이트': function () {
 						container.dialog('close');
 						movedPortals.forEach(pair => {
 							const portal = pair.ingress;
@@ -3564,11 +3565,11 @@
 			}
 
 			sidebarPogo.appendChild(createCounter('새 스탑', 'pokestops', promptForNewPokestops));
-            sidebarPogo.appendChild(createCounter('확인 필요한 셀', 'classification', promptToClassifyPokestops));
-            sidebarPogo.appendChild(createCounter('이동된 포탈', 'moved', promptToMovePokestops));
-            sidebarPogo.appendChild(createCounter('미로딩 포탈', 'missing', promptToRemovePokestops));
-            sidebarPogo.appendChild(createCounter('새 체육관', 'gyms', promptToClassifyGyms));
-            sidebarPogo.appendChild(createCounter('셀내 체육관초과', 'extraGyms', promptToVerifyGyms));
+			sidebarPogo.appendChild(createCounter('확인 필요한 셀', 'classification', promptToClassifyPokestops));
+			sidebarPogo.appendChild(createCounter('이동된 포탈', 'moved', promptToMovePokestops));
+			sidebarPogo.appendChild(createCounter('미로딩 포탈', 'missing', promptToRemovePokestops));
+			sidebarPogo.appendChild(createCounter('새 체육관', 'gyms', promptToClassifyGyms));
+			sidebarPogo.appendChild(createCounter('셀내 체육관초과', 'extraGyms', promptToVerifyGyms));
 
 			window.addHook('portalSelected', thisPlugin.onPortalSelected);
 
@@ -4002,7 +4003,7 @@
 			}
 
 			const marker = createGenericMarker(e.latlng, 'pink', {
-				title: 'Place your mark!'
+				title: '마커를 위치하세요.'
 			});
 
 			editmarker = marker;
@@ -4044,22 +4045,18 @@
 			.map(id => '<option value="' + id + '"' + (id == status ? ' selected="selected"' : '') + '>' + mapLayers[id].optionTitle + '</option>')
 			.join('');
 
-		let formContent = `<div style="width:250px;, font-size:20px;"><form id="submit-to-wayfarer">
+		let formContent = `<div class="wayfarer-planner-popup"><form id="submit-to-wayfarer">
 			<label>상태
 			<select name="status">${options}</select>
 			</label>
-			<label>신청자 닉네임
-			<input name="nickname" value="${window.PLAYER.nickname}">
-			</label>
 			<label>스탑 이름
-			<input name="title" type="text" autocomplete="off" placeholder="Title (required)" required value="${title}">
+			<input name="title" type="text" autocomplete="off" placeholder="스탑 이름 (필수)" required value="${title}">
 			</label>
-			<label>부연 설명
-			<input name="description" type="text" autocomplete="off" placeholder="Description" value="${description}">
+			<label>추가 정보
+			<input name="description" type="text" autocomplete="off" placeholder="추가 정보 작성" value="${description}">
 			</label>
-			<label>신청일자 (날자-월-년도)
-			<input name="submitteddate" type="text" autocomplete="off" placeholder="dd-mm-jjjj" value="${submitteddate}">
-			</label>
+			<div class='wayfarer-expander' title='Click to expand additional fields'>»</div>
+			<div class='wayfarer-extraData'>
 			<label>이미지 링크 (첨부 하면 좋습니다.)
 			<input name="candidateimageurl" type="text" autocomplete="off" placeholder="http://?.googleusercontent.com/***" value="${imageUrl}">
 			</label>
@@ -4067,7 +4064,7 @@
 			<input name="lat" type="hidden" value="${lat}">
 			<input name="lng" type="hidden" value="${lng}">
 
-			<button type="submit" style="width:100%; height:40px;">등록</button>
+			<button type="submit" id='wayfarer-submit'>제출</button>
 			</form>`;
 
 		if (id !== '') {
@@ -4087,12 +4084,16 @@
 		if (deleteLink != null) {
 			deleteLink.addEventListener('click', e => confirmDeleteCandidate(e, id));
 		}
+		const expander = formpopup._contentNode.querySelector('.wayfarer-expander');
+		expander.addEventListener('click', function () {
+			expander.parentNode.classList.toggle('wayfarer__expanded');
+		});
 	};
 
 	function confirmDeleteCandidate(e, id) {
 		e.preventDefault();
 
-		if (!confirm('Do you want to remove this candidate?'))
+		if (!confirm('삭제 하십니까?'))
 			return;
 
 		const formData = new FormData();
@@ -4266,7 +4267,14 @@
 
 		$('<style>')
 			.prop('type', 'text/css')
-			.html(`.wayfarer-planner-name {
+			.html(`
+			.wayfarer-planner-popup {
+				width:200px;
+			}
+			.wayfarer-planner-popup a {
+				color: #ffce00;
+			}
+			.wayfarer-planner-name {
 				font-size: 12px;
 				font-weight: bold;
 				color: gold;
@@ -4282,14 +4290,48 @@
 				opacity: 0.8;
 				pointer-events: none;
 			}
+			#submit-to-wayfarer {
+				position: relative;
+			}
 			#submit-to-wayfarer input,
 			#submit-to-wayfarer select {
 				width: 100%;
+			}
+			#submit-to-wayfarer input {
+				color: #CCC;
 			}
 			#submit-to-wayfarer label {
 				margin-top: 5px;
 				display: block;
 				color: #fff;
+			}
+			#wayfarer-submit {
+				height: 30px;
+				margin-top: 10px;
+				width: 100%;
+			}
+
+			.wayfarer-expander {
+				cursor: pointer;
+				transform: rotate(90deg) translate(-1px, 1px);
+				transition: transform .2s ease-out 0s;
+				position: absolute;
+				right: 0;
+			}
+
+			.wayfarer-extraData {
+				max-height: 0;
+				overflow: hidden;
+				margin-top: 1em;
+			}
+
+			.wayfarer__expanded .wayfarer-expander {
+				transform: rotate(270deg) translate(1px, -3px);
+			}
+
+			.wayfarer__expanded .wayfarer-extraData {
+				max-height: none;
+				margin-top: 0em;
 			}
 			`)
 			.appendTo('head');
